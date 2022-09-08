@@ -1,6 +1,4 @@
-import React, { Component, lazy } from "react";
-import Chart from "react-apexcharts";
-
+import React, { Component } from "react";
 export default class ApexCharts extends Component {
   constructor(props) {
     super(props);
@@ -20,18 +18,27 @@ export default class ApexCharts extends Component {
           data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
         },
       ],
+      ChartComponent: null,
     };
   }
 
+  async componentDidMount() {
+    if (typeof document !== undefined) {
+      const ApexCharts = await import("react-apexcharts");
+      this.setState({ ChartComponent: ApexCharts });
+    }
+  }
+
   render() {
-    return (
-      <Chart
+    const Chart = this.state.ChartComponent;
+    return Chart ? (
+      <Chart.default
         options={this.state.options}
         series={this.state.series}
         type="bar"
         width={500}
         height={320}
       />
-    );
+    ) : null;
   }
 }
